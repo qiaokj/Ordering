@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %date [%logger] %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!--INFO 级别日志-->
+    <appender name="OrderInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                %-5level %logger %msg %n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                D:\log\order\info.%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!--ERROR 级别日志-->
+    <appender name="OrderErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--通过过滤器指定该 Appender 输出日志级别-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %date %-5level %logger %msg %n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                D:\log\order\error.%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="consoleLog"/>
+        <appender-ref ref="OrderInfoLog"/>
+        <appender-ref ref="OrderErrorLog"/>
+    </root>
+</configuration>

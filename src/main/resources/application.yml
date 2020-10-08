@@ -1,0 +1,6 @@
+#logging:
+#  pattern:
+#    console: "%msg  ****   ----- %-5level     【%relative】%n"
+#  file: D:\log\order\order.log
+#  level:
+#    com.example.order.common.util.OrderConstant: debug
