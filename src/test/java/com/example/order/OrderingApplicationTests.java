@@ -1,7 +1,6 @@
 package com.example.order;
 
-import com.example.order.common.util.OrderConstant;
-import lombok.extern.slf4j.Slf4j;
+import com.example.order.common.util.ConstantProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class OrderingApplicationTests {
 
-    private final Logger logger = LoggerFactory.getLogger(OrderConstant.class);
+    private final Logger logger = LoggerFactory.getLogger(ConstantProvider.class);
 
     @Test
     public void contextLoads() {
