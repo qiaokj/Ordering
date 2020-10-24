@@ -27,4 +27,16 @@ public class OddNumberGeneratorTest {
         String s = OddNumberGenerator.generateCustomerId();
         System.out.println(s);
     }
+
+    @Test
+    public void testGeneratPhoneNumber() {
+        String s = OddNumberGenerator.generatePhoneNumber();
+        System.out.println(s);
+    }
+
+    @Test
+    public void testgenerateIdentifyNumber() {
+        String s = OddNumberGenerator.generateIdentifyNumber();
+        System.out.println(s);
+    }
 }

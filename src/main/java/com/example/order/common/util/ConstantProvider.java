@@ -12,6 +12,33 @@ public class ConstantProvider {
 
     public static String TIME_FORMAT = "yyyy-MM-dd";
 
+    public static Integer BUSINESS_INIT_SCORE = 1;
+
+    /**
+     * 请求结果返回状态码
+     */
+    public enum resultStatue {
+        SUCCESS(200, "SUCCESS"),
+        FAIL(400, "FAILED"),
+        ;
+
+        private int code;
+        private String msg;
+
+        private resultStatue(int code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
     /**
      * 市、县级代码
      */
@@ -94,6 +121,22 @@ public class ConstantProvider {
 
         public int getCode() {
             return code;
+        }
+    }
+
+    public enum ProductStatue {
+        SHELVE(0),  // 下架
+        ONSALE(1),  // 在售
+        PRESELL(2); // 预售
+
+        private int statue;
+
+        private ProductStatue(int statue) {
+            this.statue = statue;
+        }
+
+        public int getStatue() {
+            return statue;
         }
     }
 

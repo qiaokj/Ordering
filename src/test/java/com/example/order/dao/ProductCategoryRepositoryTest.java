@@ -36,8 +36,8 @@ public class ProductCategoryRepositoryTest {
     @Test
     public void addProducCategory() {
         ProductCategory category = new ProductCategory();
-        category.setName("川湘菜");//川湘菜
-        category.setType(2);
+        category.setName("羊杂");//川湘菜
+        category.setType(8);
         repository.save(category);
     }
 

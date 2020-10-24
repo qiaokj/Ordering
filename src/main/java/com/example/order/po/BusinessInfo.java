@@ -20,12 +20,24 @@ public class BusinessInfo {
     // 评分
     private Double score;
 
+    /**
+     * 实体店地址
+     */
     private String address;
 
+    /**
+     * 责任人(店主)电话
+     */
     private String phone;
 
+    /**
+     * 责任人(店主)名称
+     */
     private String linkerName;
 
+    /**
+     * 责任人(店主)证件号码
+     */
     private String linkerIdentify;
 
     // 经营范围
@@ -112,5 +124,21 @@ public class BusinessInfo {
 
     public void setIndustryId(String industryId) {
         this.industryId = industryId;
+    }
+
+    @Override
+    public String toString() {
+        return "BusinessInfo{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", sales=" + sales +
+                ", score=" + score +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", linkerName='" + linkerName + '\'' +
+                ", linkerIdentify='" + linkerIdentify + '\'' +
+                ", scope='" + scope + '\'' +
+                ", industryId='" + industryId + '\'' +
+                '}';
     }
 }

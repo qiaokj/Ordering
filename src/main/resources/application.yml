@@ -7,3 +7,6 @@ spring:
   # 显示 SQL 语句
   jpa:
     show-sql: true
+server:
+  context-path: /sell
+  port: 8080
