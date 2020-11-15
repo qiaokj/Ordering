@@ -124,21 +124,7 @@ public class ConstantProvider {
         }
     }
 
-    public enum ProductStatue {
-        SHELVE(0),  // 下架
-        ONSALE(1),  // 在售
-        PRESELL(2); // 预售
 
-        private int statue;
-
-        private ProductStatue(int statue) {
-            this.statue = statue;
-        }
-
-        public int getStatue() {
-            return statue;
-        }
-    }
 
     /**
      * 支付状态

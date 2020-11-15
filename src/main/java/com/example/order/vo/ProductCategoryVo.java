@@ -4,26 +4,26 @@ import java.util.List;
 
 public class ProductCategoryVo<T> implements java.io.Serializable {
 
-    private String categoryName;
+    private String name;
 
-    private Integer categoryId;
+    private Integer type;
 
     private List<T> productList;
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public Integer getType() {
+        return type;
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public List<T> getProductList() {

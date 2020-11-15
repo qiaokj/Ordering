@@ -24,14 +24,14 @@ public class BusinessInfoRepositoryTest {
 
         BusinessInfo businessInfo = new BusinessInfo();
         businessInfo.setId(OddNumberGenerator.generateBusinessId());
-        businessInfo.setName("清味斋");
-        businessInfo.setSales(185);
-        businessInfo.setScore(2.7);
-        businessInfo.setAddress("蒲黄榆二里5号楼");
+        businessInfo.setName("山西面食");
+        businessInfo.setSales(300);
+        businessInfo.setScore(4.2);
+        businessInfo.setAddress("丰台区东铁匠营街道670号");
         businessInfo.setPhone(OddNumberGenerator.generatePhoneNumber());
-        businessInfo.setLinkerName("清味斋");
+        businessInfo.setLinkerName("山西面食");
         businessInfo.setLinkerIdentify(OddNumberGenerator.generateIdentifyNumber());
-        businessInfo.setScope("羊汤/汤包/包子");
+        businessInfo.setScope("肉夹馍/烧饼/包子");
         businessInfo.setIndustryId(OddNumberGenerator.generateIndustryId());
 
         repository.save(businessInfo);

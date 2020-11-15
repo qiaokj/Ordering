@@ -2,7 +2,9 @@ package com.example.order.dao;
 
 import com.example.order.common.util.ConstantProvider;
 import com.example.order.common.util.OddNumberGenerator;
+import com.example.order.common.util.provider.ProductConstantProvider;
 import com.example.order.po.ProductInfo;
+import com.example.order.service.product.util.ProductUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +30,13 @@ public class ProductInfoRepositoryTest {
 
         ProductInfo productInfo = new ProductInfo();
         productInfo.setId(OddNumberGenerator.generateProductId());
-        productInfo.setName("羊杂汤");
-        productInfo.setBusinessId("B2020N6759");
-        productInfo.setCategory(3);
-        productInfo.setPrice(new BigDecimal("12.50"));
-        productInfo.setStock(40);
+        productInfo.setName("烧饼");
+        productInfo.setBusinessId("B2020N1617");
+        productInfo.setCategory(4);
+        productInfo.setPrice(new BigDecimal("2.00"));
+        productInfo.setStock(100);
         productInfo.setIcon("");
-        productInfo.setStatue(ConstantProvider.ProductStatue.ONSALE.getStatue());
+        productInfo.setStatue(ProductConstantProvider.ProductStatue.ONSALE.getStatue());
 
         repository.save(productInfo);
     }
@@ -43,7 +45,7 @@ public class ProductInfoRepositoryTest {
     @Test
     public void findAllByStatueAndBusinessId() {
         PageRequest pageRequest = new PageRequest(0, 2);
-        Page<ProductInfo> allByStatue = repository.findAllByStatue(ConstantProvider.ProductStatue.ONSALE.getStatue(), pageRequest);
+        Page<ProductInfo> allByStatue = repository.findAllByStatue(ProductConstantProvider.ProductStatue.ONSALE.getStatue(), pageRequest);
         System.out.println(allByStatue.getTotalPages());
         System.out.println(allByStatue.getTotalElements());
         System.out.println(allByStatue.getContent());

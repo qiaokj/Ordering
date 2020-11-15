@@ -36,17 +36,11 @@ public class ProductCategoryRepositoryTest {
     @Test
     public void addProducCategory() {
         ProductCategory category = new ProductCategory();
-        category.setName("羊杂");//川湘菜
-        category.setType(8);
+        category.setName("面食");//川湘菜
+        category.setType(4);
         repository.save(category);
     }
 
-    @Test
-    public void findByTypeTest() {
-        ArrayList<Integer> integers = Lists.newArrayList(1, 2);
-        List<ProductCategory> byTypeIn = repository.findByTypeIn(integers);
-        System.out.println(byTypeIn);
-    }
 
     @Test
     public void deleteProductCategory() {
