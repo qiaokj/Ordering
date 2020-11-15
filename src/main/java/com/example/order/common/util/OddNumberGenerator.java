@@ -138,6 +138,32 @@ public class OddNumberGenerator {
     }
 
     /**
+     * 随机生成订单 ID
+     * @return
+     */
+    public static String generateOrderId() {
+        StringBuilder builder = new StringBuilder("O");
+        String year = CommonUtil.parseDateToFormatStr(new Date(), "yyyy");
+        builder.append(year);
+        builder.append("N");
+        builder.append(generateRandomNumberStr(4, true));
+        return builder.toString();
+    }
+
+    /**
+     * 随机生成订单明细 ID
+     * @return
+     */
+    public static String generateOrderDetailId() {
+        StringBuilder builder = new StringBuilder("OD");
+        String year = CommonUtil.parseDateToFormatStr(new Date(), "yyyy");
+        builder.append(year);
+        builder.append("N");
+        builder.append(generateRandomNumberStr(3, true));
+        return builder.toString();
+    }
+
+    /**
      * 随机手机号
      * 第一位为 1，第二位必定为3或4或5或7或8，其他位置的可以为 0-9
      *

@@ -14,6 +14,9 @@ public class ConstantProvider {
 
     public static Integer BUSINESS_INIT_SCORE = 1;
 
+    public static Integer VALID = 1;
+    public static Integer INVALID = 0;
+
     /**
      * 请求结果返回状态码
      */
@@ -106,61 +109,11 @@ public class ConstantProvider {
         }
     }
 
-    /**
-     * 支付方式
-     */
-    public enum PayStyle {
-        // 在线支付
-        ONLINE_PAY(1);
-
-        private int code;
-
-        private PayStyle(int code) {
-            this.code = code;
-        }
-
-        public int getCode() {
-            return code;
-        }
-    }
 
 
 
-    /**
-     * 支付状态
-     */
-    public enum PayStatus {
 
-        // 等待支付
-        WAIT_PAYMENT(0, "WAIT_PAYMENT"),
-        // 支付成功
-        SUCCESS_PAYMENT(1, "SUCCESS_PAYMENT"),
-        // 支付失败
-        FAILED_PAYMENT(2, "FAILED_PAYMENT"),
-        // 超时支付
-        TIMEOUT_PAYMENT(3, "TIMEOUT_PAYMENT");
 
-        private int code;
-        private String codeStr;
-
-        private PayStatus(int code, String codeStr) {
-            this.code = code;
-            this.codeStr = codeStr;
-        }
-
-        private PayStatus() {
-            this.code = 0;
-            this.codeStr = "WAIT_PAYMENT";
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getCodeStr() {
-            return codeStr;
-        }
-    }
 
     /**
      * 性别常量
