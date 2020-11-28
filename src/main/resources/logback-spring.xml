@@ -17,7 +17,7 @@
         </filter>
         <encoder>
             <pattern>
-                %-5level %logger %msg %n
+                %date %-5level %logger %msg %n
             </pattern>
         </encoder>
         <!--滚动策略-->

@@ -1,7 +1,9 @@
 package com.example.order.service.product.impl;
 
+import com.example.order.common.util.provider.ExceptionEnum;
 import com.example.order.common.util.provider.ProductConstantProvider;
 import com.example.order.dao.ProductInfoRepository;
+import com.example.order.exception.ProductException;
 import com.example.order.po.ProductInfo;
 import com.example.order.service.category.CategoryService;
 import com.example.order.service.product.ProductService;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,5 +99,36 @@ public class ProductServiceImpl implements ProductService {
         packageProductListByCategory(resultPageVo.getContent());
 
         return resultPageVo;
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void reduceProductStock(String productId, Integer stock) {
+        ProductInfo productInfo = productInfoRepository.findOne(productId);
+        if (productInfo == null) {
+            throw new ProductException(ExceptionEnum.PRODUCT_NO_EXIST);
+        }
+
+        Integer currentStock = productInfo.getStock();
+        if (currentStock == null || (currentStock - stock) < 0) {
+            throw new ProductException(ExceptionEnum.PRODUCT_NO_STOCK);
+        }
+        int leftStock = currentStock - stock;
+
+        productInfo.setStock(leftStock);
+        productInfoRepository.save(productInfo);
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void increaseProductStock(String productId, Integer stock) {
+
+        ProductInfo productInfo = productInfoRepository.findOne(productId);
+        if (productInfo == null) {
+            throw new ProductException(ExceptionEnum.PRODUCT_NO_EXIST);
+        }
+        productInfo.setStock(stock);
+        productInfoRepository.save(productInfo);
+
     }
 }

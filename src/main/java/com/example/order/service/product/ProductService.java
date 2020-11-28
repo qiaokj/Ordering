@@ -29,4 +29,18 @@ public interface ProductService {
      * @return
      */
     PageVo<ProductCategoryVo<ProductVo>> findProductByCategoryType(List<Integer> types);
+
+    /**
+     * 扣减库存
+     * @param productId
+     * @param stock
+     */
+    public void reduceProductStock(String productId, Integer stock);
+
+    /**
+     * 增加库存
+     * @param productId
+     * @param stock
+     */
+    public void increaseProductStock(String productId, Integer stock);
 }

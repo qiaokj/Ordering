@@ -34,7 +34,7 @@ public class CommonUtil {
      * @param format
      * @return
      */
-    public static Date parseStrToFormatDate(String dateStr, String format) throws ParseException {
+    public static Date parseStrToFormatDate(String dateStr, String format) {
 
         if (StringUtils.isBlank(dateStr)) {
             throw new NullPointerException("未指定解析字符串");
@@ -45,7 +45,76 @@ public class CommonUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         // 严格解析时间
         dateFormat.setLenient(false);
-        return dateFormat.parse(dateStr);
+
+        Date date = null;
+
+        try {
+            date = dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+    /**
+     * 比较时间是否比指定提前
+     * @param date
+     * @param target
+     * @return
+     */
+    public static Boolean checkDateBeforeTarget(Date date, Date target) {
+
+        if (date == null || target == null) {
+            return false;
+        }
+
+        return date.getTime() < target.getTime();
+    }
+
+    /**
+     *
+     * @param date
+     * @param target
+     * @return
+     */
+    public static Boolean checkDateAfterTarget(Date date, Date target) {
+
+        if (date == null || target == null) {
+            return false;
+        }
+
+        return date.getTime() > target.getTime();
+    }
+
+    /**
+     *
+     * @param dateStr
+     * @param targetStr
+     * @param format
+     * @return
+     */
+    public static Boolean checkDateBeforeTarget(String dateStr, String targetStr, String format) {
+
+        Date date = parseStrToFormatDate(dateStr, format);
+        Date targetDate = parseStrToFormatDate(targetStr, format);
+
+        return checkDateBeforeTarget(date, targetDate);
+    }
+
+    /**
+     *
+     * @param dateStr
+     * @param targetStr
+     * @param format
+     * @return
+     */
+    public static Boolean checkDateAfterTarget(String dateStr, String targetStr, String format) {
+
+        Date date = parseStrToFormatDate(dateStr, format);
+        Date targetDate = parseStrToFormatDate(targetStr, format);
+
+        return checkDateAfterTarget(date, targetDate);
     }
 
 }
