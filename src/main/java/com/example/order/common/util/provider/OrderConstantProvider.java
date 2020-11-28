@@ -107,6 +107,7 @@ public class OrderConstantProvider {
 
         /**
          * 判断是否支付成功
+         *
          * @param status
          * @return
          */
@@ -123,7 +124,7 @@ public class OrderConstantProvider {
         // 在线支付
         ONLINE_PAY(1);
 
-        private int code;
+        private final int code;
 
         private PayStyle(int code) {
             this.code = code;
@@ -131,6 +132,35 @@ public class OrderConstantProvider {
 
         public int getCode() {
             return code;
+        }
+    }
+
+    public enum WalletTradeType {
+        // 支付
+        VIRTUAL_TRADE_RECHARGE(0, "VIRTUAL_TRADE_RECHARGE"),
+        // 提现
+        VIRTUAL_TRADE_WITHDRAW(1, "VIRTUAL_TRADE_WITHDRAW"),
+
+        TRADE_RECHARGE(1 << 1, "TRADE_RECHARGE"),
+        TRADE_WITHDRAW(1 << 2, "TRADE_WITHDRAW"),
+        TRADE_PAY(1 << 3, "TRADE_PAY");
+
+        // 常量代码
+        private final Integer code;
+        // 常量说明
+        private final String msg;
+
+        WalletTradeType(Integer code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
         }
     }
 }

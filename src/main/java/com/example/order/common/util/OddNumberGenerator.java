@@ -2,7 +2,6 @@ package com.example.order.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
@@ -26,7 +25,7 @@ public class OddNumberGenerator {
             int val = -1;
             do {
                 val = random.nextInt() % 9 + 1;
-                if (index == 0 && (val < 0 || !isZero && val == 0)) {
+                if (index == 0 && (val < 0 || (!isZero && val == 0))) {
                     val = -1;
                 }
             } while (val < 0);
@@ -91,6 +90,43 @@ public class OddNumberGenerator {
         builder.append(Objects.requireNonNull(generateRandomNumberStr(2, true)));
         builder.append("B");
         return builder.toString();
+    }
+
+    /**
+     * 随机生成虚拟钱包流水号
+     * @return
+     */
+    public static String generateVirtualWalletTradeNo() {
+        // 91331002MA28GEX11B
+        StringBuilder builder = new StringBuilder("Vwt-");
+        builder.append(CommonUtil.parseDateToFormatStr(new Date(), "yyyy")); // 8
+        builder.append(generateRandomNumberStr(24, true));
+        return builder.toString();
+    }
+
+    /**
+     * 随机生成钱包交易流水账号
+     * @return
+     */
+    public static String generateWalletTradeNo() {
+        // 91331002MA28GEX11B
+        StringBuilder builder = new StringBuilder("Wt-");
+        builder.append(CommonUtil.parseDateToFormatStr(new Date(), "yyyy")); // 7
+        builder.append(generateRandomNumberStr(25, true));
+        return builder.toString();
+    }
+
+    /**
+     * 随机生成虚拟账号 ID
+     * @return
+     */
+    public static String generateVirtualWalletId(String userId) {
+        // C2020N2091
+        String result = null;
+        if (StringUtils.startsWith(userId, "C")) {
+            result = StringUtils.replace(userId, "C", "V");
+        }
+        return result;
     }
 
     /**
