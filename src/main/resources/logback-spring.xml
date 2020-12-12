@@ -47,6 +47,44 @@
         </rollingPolicy>
     </appender>
 
+    <!--  全局异常处理日志  -->
+    <appender name="globalErrorHandler" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                %date %-5level %logger %msg %n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                D:\log\order\globalErrorHandler.%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.example.order.exception.SystemExceptionHandler"  level="ERROR" additivity="false" >
+        <appender-ref ref="globalErrorHandler"/>
+    </logger>
+
+    <!--  订单支付超时定时任务处理日志  -->
+    <appender name="orderScheduleProcess" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                %date %-5level %logger %msg %n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                D:\log\order\orderScheduleProcess.%d.log
+            </fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.example.order.schedule.OrderScheduleTask"  level="DEBUG" additivity="false" >
+        <appender-ref ref="orderScheduleProcess"/>
+    </logger>
+
     <root level="info">
         <appender-ref ref="consoleLog"/>
         <appender-ref ref="OrderInfoLog"/>

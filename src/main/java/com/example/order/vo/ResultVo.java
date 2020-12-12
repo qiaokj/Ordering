@@ -1,6 +1,9 @@
 package com.example.order.vo;
 
 import com.example.order.common.util.ConstantProvider;
+import com.example.order.exception.SystemClientException;
+import com.example.order.exception.SystemOtherException;
+import com.example.order.exception.SystemServerException;
 
 import java.io.Serializable;
 
@@ -20,6 +23,38 @@ public class ResultVo<T> implements Serializable {
 
     public static <T> ResultVo failedWithData(T data) {
         return new ResultVo(ConstantProvider.resultStatue.FAIL, data);
+    }
+
+    public static ResultVo failedWithNoData(SystemServerException exception) {
+        return new ResultVo(exception.getErrorCode(), exception.getErrorMsg(), exception.getErrorExplain());
+    }
+
+    public static ResultVo failedWithNoData(SystemServerException exception, String desc) {
+        return new ResultVo(exception.getErrorCode(), exception.getErrorMsg(), desc);
+    }
+
+    public static ResultVo failedWithNoData(SystemClientException exception) {
+        return new ResultVo(exception.getErrorCode(), exception.getErrorMsg(), exception.getErrorExplain());
+    }
+
+    public static ResultVo failedWithNoData(SystemClientException exception, String desc) {
+        return new ResultVo(exception.getErrorCode(), exception.getErrorMsg(), desc);
+    }
+
+    public static ResultVo failedWithNoData(SystemOtherException exception) {
+        return new ResultVo(exception.getErrorCode(), exception.getErrorMsg(), exception.getErrorExplain());
+    }
+
+    public static ResultVo failedWithNoData(SystemOtherException exception, String desc) {
+        return new ResultVo(exception.getErrorCode(), exception.getErrorMsg(), desc);
+    }
+
+    public static ResultVo failedWithNoData(Exception exception) {
+        return new ResultVo(500, exception.getMessage());
+    }
+
+    public static ResultVo failedWithNoData(Exception exception, String desc) {
+        return new ResultVo(500, exception.getMessage(), desc);
     }
 
     /**

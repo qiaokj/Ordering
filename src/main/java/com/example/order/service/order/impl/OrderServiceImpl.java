@@ -3,18 +3,24 @@ package com.example.order.service.order.impl;
 import com.example.order.common.util.CommonUtil;
 import com.example.order.common.util.OddNumberGenerator;
 import com.example.order.common.util.provider.ExceptionEnum;
+import com.example.order.common.util.provider.OrderConstantProvider;
 import com.example.order.dao.*;
 import com.example.order.dto.CartDto;
 import com.example.order.dto.OrderInfoDto;
+import com.example.order.exception.CustomerException;
 import com.example.order.exception.OrderException;
+import com.example.order.exception.SystemClientException;
 import com.example.order.po.*;
 import com.example.order.service.order.OrderService;
 import com.example.order.service.order.util.OrderMasterUtil;
 import com.example.order.service.product.ProductService;
+import com.example.order.vo.BasicQueryVo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -94,6 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单总价计算, 并生成库存扣减数据
+     *
      * @param orderInfo
      */
     private List<CartDto> calculateProductListBill(OrderInfoDto orderInfo) {
@@ -101,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalAmount = BigDecimal.ZERO;
         List<CartDto> cartList = new ArrayList<>();
 
-        LOGGER.info("线程 ID: " + Thread.currentThread().getId() + ", 在 " + CommonUtil.parseDateToFormatStr(new Date(), null) +" 开始计算订单总金额");
+        LOGGER.info("线程 ID: " + Thread.currentThread().getId() + ", 在 " + CommonUtil.parseDateToFormatStr(new Date(), null) + " 开始计算订单总金额");
 
         for (OrderDetail orderDetail : orderInfo.getOrderDetailList()) {
 
@@ -124,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
         // 设置订单金额
         orderInfo.setAmount(totalAmount);
 
-        LOGGER.info("线程 ID: " + Thread.currentThread().getId() + ", 在 " + CommonUtil.parseDateToFormatStr(new Date(), null) +" 完成计算订单总金额, 订单总金额 {}", totalAmount);
+        LOGGER.info("线程 ID: " + Thread.currentThread().getId() + ", 在 " + CommonUtil.parseDateToFormatStr(new Date(), null) + " 完成计算订单总金额, 订单总金额 {}", totalAmount);
 
 
         // todo 优惠金额计算
@@ -134,6 +141,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单数据有效性校验
+     *
      * @param orderInfo
      */
     private void orderInfoValidCheckAndInit(OrderInfoDto orderInfo) {
@@ -203,12 +211,55 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderInfoDto queryOrder(String orderId) {
-        return null;
+
+        if (StringUtils.isBlank(orderId)) {
+            throw new OrderException(ExceptionEnum.ORDER_PARAM_INVALID);
+        }
+
+        // 查询订单信息
+        OrderMaster master = orderMasterRepository.findOne(orderId);
+        if (master == null) {
+            throw new OrderException(ExceptionEnum.ORDER_NOT_EXIST_ERROR);
+        }
+
+        // 查询订单明细信息
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrderId(master.getId());
+        if (orderDetailList == null || orderDetailList.isEmpty()) {
+            throw new OrderException(ExceptionEnum.ORDERDETAIL_NOT_EXIST_ERROR);
+        }
+
+        OrderInfoDto orderInfoDto = new OrderInfoDto();
+        OrderMasterUtil.copyFromOrderMasterToDto(orderInfoDto, master);
+
+        orderInfoDto.setOrderDetailList(orderDetailList);
+
+        return orderInfoDto;
     }
 
     @Override
     public List<OrderInfoDto> queryOrderList(String userName, String userId) {
-        return null;
+
+        if (StringUtils.isBlank(userName) || StringUtils.isBlank(userId)) {
+            throw new CustomerException(ExceptionEnum.USER_INFO_NOT_EXIST_ERROR);
+        }
+
+        List<OrderInfoDto> orderMasetList = new ArrayList<>();
+
+        // 默认取出所有的数据
+        PageRequest pageRequest = new PageRequest(0, 1000);
+
+        Page<OrderMaster> orderMasetPage = orderMasterRepository.findOneByCustomerNameLikeAndCustomerIdOrderByOrderTime(userName, userId, pageRequest);
+        if (orderMasetPage.getTotalElements() == 0) {
+            return orderMasetList;
+        }
+
+        for (OrderMaster orderMaster : orderMasetPage.getContent()) {
+            OrderInfoDto orderInfo = new OrderInfoDto();
+            OrderMasterUtil.copyFromOrderMasterToDto(orderInfo, orderMaster);
+            orderMasetList.add(orderInfo);
+        }
+
+        return orderMasetList;
     }
 
     @Override
@@ -217,8 +268,74 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderInfoDto cancelOrder(OrderInfoDto orderInfo) {
-        return null;
+    public List<String> queryWaitPayOrderList() {
+
+        // 计算订单超时基准时间
+        Date date = CommonUtil.subTime(new Date(), OrderConstantProvider.DEFAULT_PAY_TIMEOUT);
+
+        // 每次从数据库查询10条数据
+        PageRequest pageRequest = new PageRequest(0, 10);
+
+        // 查询已经超时的未支付订单
+        Page<OrderMaster> waitPayOrderPage = orderMasterRepository.
+                findOrderMasterByOrderTimeBeforeAndPayStatusAndValid(date, OrderConstantProvider.PayStatus.WAIT_PAYMENT.getCode(),OrderConstantProvider.ORDER_VALID, pageRequest);
+
+        List<String> orderIdList = new ArrayList<>();
+
+        List<OrderMaster> waitPayOrderList = waitPayOrderPage.getContent();
+        if (waitPayOrderList.size() > 0) {
+            for (OrderMaster orderMaster : waitPayOrderList) {
+                orderIdList.add(orderMaster.getId());
+            }
+        }
+
+        LOGGER.info("{} 查询未支付的订单总数量为 {}", CommonUtil.parseDateToFormatStr(date, "yyyy-MM-dd HH:mm:ss"), waitPayOrderPage.getTotalElements());
+
+        return orderIdList;
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public OrderInfoDto cancelOrder(String orderId) {
+
+        List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrderId(orderId);
+
+        for (OrderDetail orderDetail : orderDetails) {
+
+            // 对订单中的库存等数据进行复原, 如果商品已经不存（过期或删除）在则不进行任何操作
+            String productId = orderDetail.getProductId();
+            productService.increaseProductStock(productId, orderDetail.getProductQuantity());
+        }
+
+        this.updateOrderStatus(orderId, OrderConstantProvider.OrderStatus.ORDER_CANCEL.getStatus(), OrderConstantProvider.ORDER_INVALID);
+
+        return this.queryOrder(orderId);
+    }
+
+    /**
+     * 将订单设置为取消的状态
+     * @param orderId
+     * @param status
+     * @param isValid
+     */
+    private void updateOrderStatus(String orderId, int status, Integer isValid) {
+
+        OrderMaster orderMaster = orderMasterRepository.findOne(orderId);
+        if (orderMaster == null) {
+            throw new OrderException(ExceptionEnum.ORDER_NOT_EXIST_ERROR);
+        }
+
+        // 校验需要设置的订单状态
+        if (status > 0 && (status % 2 == 0)) {
+
+        } else {
+            throw new OrderException(ExceptionEnum.ORDER_PARAM_INVALID);
+        }
+
+        orderMaster.setOrderStatus(status);
+        orderMaster.setValid(isValid);
+
+        orderMasterRepository.save(orderMaster);
     }
 
     @Override
@@ -234,5 +351,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderInfoDto finishOrder(String orderId, String businessId) {
         return null;
+    }
+
+    @Override
+    public List<OrderInfoDto> queryOrderList(BasicQueryVo queryVo) {
+
+        if (queryVo == null) {
+            throw new SystemClientException(ExceptionEnum.SYSTEM_CLIENT_EXCEPTION);
+        }
+
+        String customerName = queryVo.getCustomerName();
+        String customerId = queryVo.getCustomerId();
+
+        return this.queryOrderList(customerName, customerId);
     }
 }

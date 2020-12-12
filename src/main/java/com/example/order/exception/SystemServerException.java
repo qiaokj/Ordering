@@ -5,7 +5,7 @@ import com.example.order.common.util.provider.ExceptionEnum;
 /**
  * 异常基类
  */
-public abstract class BusinessException extends RuntimeException {
+public abstract class SystemServerException extends RuntimeException {
 
     /**
      * 错误码
@@ -20,18 +20,29 @@ public abstract class BusinessException extends RuntimeException {
      */
     private String errorExplain;
 
-    public BusinessException(Integer errorCode, String errorMsg, String errorExplain) {
+    public SystemServerException(Integer errorCode, String errorMsg, String errorExplain) {
         super(errorMsg);
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
         this.errorExplain = errorExplain;
     }
 
-    public BusinessException(ExceptionEnum exceptionEnum) {
+    public SystemServerException(ExceptionEnum exceptionEnum) {
         super(exceptionEnum.getMsg());
         this.errorCode = exceptionEnum.getCode();
         this.errorMsg = exceptionEnum.getMsg();
         this.errorExplain = exceptionEnum.getExplain();
     }
 
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public String getErrorExplain() {
+        return errorExplain;
+    }
 }

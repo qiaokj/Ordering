@@ -1,6 +1,7 @@
 package com.example.order.service.order;
 
 import com.example.order.dto.OrderInfoDto;
+import com.example.order.vo.BasicQueryVo;
 
 import java.util.Date;
 import java.util.List;
@@ -37,11 +38,19 @@ public interface OrderService {
      */
     public List<OrderInfoDto> queryOrderList(Date orderStartDate, Date orderEndDate);
 
-    public OrderInfoDto cancelOrder(OrderInfoDto orderInfo);
+    /**
+     * 查询指定时间内指定支付状态的订单
+     * @return
+     */
+    public List<String> queryWaitPayOrderList();
+
+    public OrderInfoDto cancelOrder(String orderId);
 
     public OrderInfoDto payOrder();
 
     public OrderInfoDto acceptOrder(String orderId, String businessId);
 
     public OrderInfoDto finishOrder(String orderId, String businessId);
+
+    public List<OrderInfoDto> queryOrderList(BasicQueryVo queryVo);
 }

@@ -117,4 +117,48 @@ public class CommonUtil {
         return checkDateAfterTarget(date, targetDate);
     }
 
+    /**
+     * 增加时间
+     * @param date
+     * @param val
+     * @return
+     */
+    public static Date addTime(Date date, Long val) {
+
+        if (date != null) {
+            return new Date(date.getTime() + val);
+        }
+        return new Date(System.currentTimeMillis() + val);
+    }
+
+    public static Date addTime(String date, Long val) {
+
+        if (date != null) {
+            return new Date(parseStrToFormatDate(date, "yyyy-MM-dd HH:mm:ss").getTime() + val);
+        }
+        return new Date(System.currentTimeMillis() + val);
+    }
+
+    /**
+     * 减少时间
+     * @param date
+     * @param val
+     * @return
+     */
+    public static Date subTime(Date date, Long val) {
+
+        if (date != null) {
+            return new Date(date.getTime() - val);
+        }
+        return new Date(System.currentTimeMillis() - val);
+    }
+
+    public static Date subTime(String date, Long val) {
+
+        if (date != null) {
+            return new Date(parseStrToFormatDate(date, "yyyy-MM-dd HH:mm:ss").getTime() - val);
+        }
+        return new Date(System.currentTimeMillis() - val);
+    }
+
 }

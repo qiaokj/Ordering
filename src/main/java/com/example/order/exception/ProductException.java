@@ -5,7 +5,7 @@ import com.example.order.common.util.provider.ExceptionEnum;
 /**
  * 商品异常
  */
-public class ProductException extends BusinessException {
+public class ProductException extends SystemServerException {
 
 
     public ProductException(Integer errorCode, String errorMsg, String errorExplain) {

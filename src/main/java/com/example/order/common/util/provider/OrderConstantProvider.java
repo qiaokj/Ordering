@@ -6,8 +6,11 @@ package com.example.order.common.util.provider;
 public class OrderConstantProvider {
 
     // 订单是否有效
-    public static Integer ORDER_VALID = 1;  // 有效
-    public static Integer ORDER_INVALID = 0;    // 无效
+    public static final Integer ORDER_VALID = 1;  // 有效
+    public static final Integer ORDER_INVALID = 0;    // 无效
+
+    // 订单状态掩码
+    public static final Integer ORDER_STATUE_MASK = 511;
 
     // todo 以后将常量的更改为配置文件形式或者数据库配置
 
